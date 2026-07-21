@@ -24,7 +24,7 @@
 // ───── 1. CORE ─────
 
 /** Studio contact — scope proposals are emailed here */
-export const OWNER_EMAIL = "info@hayertechnologies.tech";
+export const OWNER_EMAIL = "bhagatsingh21216247@gmail.com";
 
 /** WhatsApp number for follow-up (no + prefix, digits only) */
 export const OWNER_WHATSAPP = "917877514132";
