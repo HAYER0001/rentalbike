@@ -193,7 +193,7 @@ export function LivePreview() {
   }
 
   return (
-    <div className="brand-live h-full flex flex-col overflow-hidden">
+    <div className="brand-live w-full flex-1 h-full flex flex-col overflow-hidden">
       {/* ─── Browser chrome ─── */}
       <div className="flex items-center gap-2 px-4 py-2.5 border-b border-hairline shrink-0">
         <div className="flex gap-1.5">
