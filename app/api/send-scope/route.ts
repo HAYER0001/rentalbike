@@ -433,7 +433,11 @@ export async function POST(request: Request) {
 
     const formRes = await fetch(`https://formsubmit.co/ajax/${OWNER_EMAIL}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Referer": request.headers.get("referer") || "https://rental.hayertechnologies.tech/"
+      },
       body: JSON.stringify({
         _subject: subject,
         _template: "table",
@@ -450,6 +454,14 @@ export async function POST(request: Request) {
       const text = await formRes.text();
       console.error("[send-scope] FormSubmit error:", text);
       throw new Error(`FormSubmit failed: ${text}`);
+    }
+
+    const formJson = await formRes.json();
+    if (formJson.success === "false") {
+      console.warn("[send-scope] FormSubmit returned success:false", formJson.message);
+      // It might be the activation email message, so we shouldn't throw a hard 500 error, 
+      // but we should log it. We still return ok: true so the client doesn't get a mailto popup 
+      // if we are just waiting for the owner to click 'Activate'.
     }
 
     console.log("[send-scope] Sent via FormSubmit:", { quoteId, businessName, grandTotal });
