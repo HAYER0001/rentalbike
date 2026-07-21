@@ -405,38 +405,33 @@ export async function POST(request: Request) {
     });
 
     // ── Primary: Resend ──
-    if (!useFormSubmit) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (!apiKey) {
-        // No key configured — fall through to FormSubmit or mailto
-        console.warn("[send-scope] RESEND_API_KEY not set. Falling back.");
-        throw new Error("RESEND_API_KEY not configured");
+    if (!useFormSubmit && process.env.RESEND_API_KEY) {
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const { error } = await resend.emails.send({
+          from: "Rental Scope Studio <onboarding@resend.dev>",
+          to: OWNER_EMAIL,
+          replyTo: ownerEmail || OWNER_EMAIL,
+          subject,
+          html: htmlBody,
+        });
+
+        if (error) {
+          console.error("[send-scope] Resend error:", error);
+          throw error; // Fall through to FormSubmit
+        }
+
+        console.log("[send-scope] Sent via Resend:", { quoteId, businessName, grandTotal });
+        return NextResponse.json({ ok: true, quoteId });
+      } catch (err) {
+        console.warn("[send-scope] Resend failed, falling back to FormSubmit.", err);
       }
-
-      const resend = new Resend(apiKey);
-      const { error } = await resend.emails.send({
-        from: "Rental Scope Studio <onboarding@resend.dev>",
-        // Once hayertechnologies.tech is verified in Resend, change from to:
-        // from: "Rental Scope Studio <scope@hayertechnologies.tech>",
-        to: OWNER_EMAIL,
-        replyTo: ownerEmail || OWNER_EMAIL,
-        subject,
-        html: htmlBody,
-      });
-
-      if (error) {
-        console.error("[send-scope] Resend error:", error);
-        throw error;
-      }
-
-      console.log("[send-scope] Sent via Resend:", { quoteId, businessName, grandTotal });
-      return NextResponse.json({ ok: true, quoteId });
     }
 
     // ── Fallback: FormSubmit ──
     console.log("[send-scope] Using FormSubmit fallback");
 
-    const formRes = await fetch("https://formsubmit.co/ajax/info@hayertechnologies.tech", {
+    const formRes = await fetch(`https://formsubmit.co/ajax/${OWNER_EMAIL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
