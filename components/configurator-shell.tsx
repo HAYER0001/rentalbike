@@ -131,7 +131,7 @@ export function ConfiguratorShell() {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
           onClick={() => setPreviewSheetOpen(true)}
-          className="brand-live md:hidden fixed bottom-6 right-5 z-40 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+          className="brand-live md:hidden fixed bottom-[120px] right-5 z-40 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
           style={{ background: theme["--ember"] }}
         >
           <svg className="w-6 h-6" style={{ color: getReadableTextColor(theme["--ember"]) }} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
