@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "@/lib/store";
 import { BusinessTypePicker } from "@/components/business-type-picker";
@@ -7,6 +8,13 @@ import { ConfiguratorShell } from "@/components/configurator-shell";
 
 export default function Home() {
   const { state } = useCart();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <AnimatePresence mode="wait">

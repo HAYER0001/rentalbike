@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, type ReactNode } from "react";
+import { useRef, useEffect, useState, forwardRef, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/store";
@@ -82,20 +82,14 @@ const ghostStyle = { opacity: 0.3, border: "1px dashed var(--hairline)", pointer
 
 // ───── Section wrapper (handles enabled/ghost/AnimatePresence) ─────
 
-function PreviewSection({
-  show,
-  isGhost,
-  children,
-  delay = 0,
-}: {
-  show: boolean;
-  isGhost: boolean;
-  children: ReactNode;
-  delay?: number;
-}) {
+const PreviewSection = forwardRef<
+  HTMLElement,
+  { show: boolean; isGhost: boolean; children: ReactNode; delay?: number }
+>(({ show, isGhost, children, delay = 0 }, ref) => {
   if (!show) return null;
   return (
     <motion.section
+      ref={ref}
       variants={sectionVariants}
       initial="hidden"
       animate={isGhost ? { ...sectionVariants.visible } : "visible"}
@@ -106,7 +100,8 @@ function PreviewSection({
       {children}
     </motion.section>
   );
-}
+});
+PreviewSection.displayName = "PreviewSection";
 
 // ───── Business type icon map ─────
 
