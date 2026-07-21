@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ink: #0E1116;
+    --surface: #171C22;
+    --sand: #E8E2D4;
+    --ember: #E85D2A;
+    --pine: #2F6D4F;
+    --gold: #E0A536;
+    --hairline: rgba(255, 255, 255, 0.08);
+  }
+
+  ::selection {
+    background: rgba(232, 93, 42, 0.3);
+    color: #E8E2D4;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--ink);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--hairline);
+    border-radius: 3px;
+  }
+}
+
+/* ─── Grain overlay (applied via pseudo-element in layout) ─── */
+.grain-overlay::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ─── Hide scrollbar utility ─── */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── Smooth transitions ─── */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 250ms;
+}
+
+/* ─── "Make it yours" brand crossfade — retinting the live preview reads as
+   a deliberate 400ms wash rather than a hard flip ─── */
+.brand-live,
+.brand-live * {
+  transition-duration: 400ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Print styles (PDF quote) ─── */
+@media print {
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide everything except the print-friendly content */
+  nav, aside, button, footer, .grain-overlay::after,
+  .sticky, [class*="EstimateBar"], [class*="preview-sheet"],
+  .md\\:hidden, .fixed, [class*="floating"] {
+    display: none !important;
+  }
+
+  /* Show the main content area */
+  [class*="controls-scroll"], main, article {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Print-specific header */
+  .print-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 12px;
+    border-bottom: 2px solid #0E1116;
+    margin-bottom: 20px;
+  }
+
+  .print-header h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0E1116;
+    margin: 0;
+  }
+
+  .print-header .print-meta {
+    font-size: 10px;
+    color: #666;
+    text-align: right;
+  }
+
+  .print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 8px;
+    color: #999;
+    padding: 8px;
+    border-top: 1px solid #ddd;
+  }
+
+  /* Force black text on white for print */
+  * {
+    background: transparent !important;
+    color: #111 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Keep gold/ember accent on prices */
+  [class*="text-gold"], [class*="text-ember"], [class*="text-pine"] {
+    color: #0E1116 !important;
+  }
+
+  /* Ensure tabular numbers */
+  .tabular-nums, .font-mono {
+    font-variant-numeric: tabular-nums !important;
+  }
+
+  /* Avoid page breaks inside items */
+  .rounded-xl, [class*="border"] {
+    border-color: #ddd !important;
+    page-break-inside: avoid;
+  }
+
+  /* Tier dots visible */
+  [class*="rounded-full"] {
+    print-color-adjust: exact !important;
+  }
+}
