@@ -158,6 +158,12 @@ function createInitialState(saved?: CartState | null): CartState {
       ...saved,
       avgBookingValue: saved.avgBookingValue ?? getDefaultBookingValue(saved.businessType),
       brand: saved.brand ?? createDefaultBrandState(),
+      enabledFeatures: saved.enabledFeatures ?? [],
+      extras: saved.extras ?? [],
+      phase2Features: saved.phase2Features ?? [],
+      phase2Extras: saved.phase2Extras ?? [],
+      closeUpsells: saved.closeUpsells ?? [],
+      retainerOptIn: saved.retainerOptIn ?? false,
       restored: true,
     };
   }
